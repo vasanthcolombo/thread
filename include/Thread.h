@@ -16,7 +16,7 @@ public:
     Thread(int id);
     virtual ~Thread() {};
     void join();
-    virtual void start();
+    void start();
     void stop();
     int get_id();
     bool is_stopped();

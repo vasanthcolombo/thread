@@ -2,7 +2,7 @@
 // Created by vasan on 9/8/2019.
 //
 
-#include "../include/Thread.h"
+#include "Thread.h"
 
 Thread::Thread(int id) : _id(id){
     stopped = true;
