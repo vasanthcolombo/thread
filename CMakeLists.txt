@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
-project(Thread)
+project(vlib)
 
 set(CMAKE_CXX_STANDARD 17)
 
-FILE(GLOB SOURCE src/*.cpp)
-add_executable(Thread
+FILE(GLOB SOURCE thread/src/*.cpp)
+add_executable(vthread
         ${SOURCE})
 
-include_directories(include)
+target_include_directories(vthread
+        PRIVATE thread/include)

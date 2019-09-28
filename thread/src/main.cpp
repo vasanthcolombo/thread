@@ -1,6 +1,8 @@
 #include <iostream>
 #include <Thread.h>
 
+using namespace VThread;
+
 class Account {
 public:
     Account(long lBalance) : _lBalance(lBalance) {

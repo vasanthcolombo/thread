@@ -3,6 +3,7 @@
 //
 
 #include "Thread.h"
+using namespace VThread;
 
 Thread::Thread(int id) : _id(id){
     stopped = true;
