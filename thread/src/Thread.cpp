@@ -3,10 +3,18 @@
 //
 
 #include "Thread.h"
+#include <sstream>
+
 using namespace VThread;
 
-Thread::Thread(int id) : _id(id){
+Thread::Thread(long id) : _id(id){
     stopped = true;
+}
+
+Thread::Thread() {
+    std::stringstream ss;
+    ss << this_thread::get_id();
+    _id = stol(ss.str());
 }
 void Thread::start() {
     stopped = false;

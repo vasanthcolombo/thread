@@ -21,6 +21,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
         ${CMAKE_BINARY_DIR}/googletest-build)
 
+# Thread
 FILE(GLOB THREAD_SOURCE
         thread/src/*.cpp)
 add_executable(thread
@@ -28,6 +29,7 @@ add_executable(thread
 target_include_directories(thread
         PRIVATE thread/include)
 
+# ObjectPool
 FILE(GLOB OBJECTPOOL_SOURCE
         objectPool/src/main.cpp)
 add_executable(objectPool
@@ -35,9 +37,24 @@ add_executable(objectPool
 target_include_directories(objectPool
         PRIVATE objectPool/include)
 
+# PRODUCER_CONSUMER
+FILE(GLOB PRODUCERCONSUMER_SOURCE
+        thread/src/*.cpp
+        producerConsumer/src/*.cpp)
+add_executable(producerConsumer
+        ${PRODUCERCONSUMER_SOURCE})
+target_include_directories(producerConsumer
+        PRIVATE producerConsumer/include
+        PRIVATE thread/include)
+
 enable_testing()
 add_subdirectory(${CMAKE_SOURCE_DIR}/objectPool/test)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/producerConsumer)
 #add_dependencies(objectPool
 #        objectPoolTest)
-add_executable(scratch
-        C:/Users/vasan/.CLion2019.2/config/scratches/scratch.cpp)
+
+add_executable(ringbuffer
+        producerConsumer/ringbuffer.cpp)
+
+add_executable(game
+        game.cpp)

@@ -8,7 +8,7 @@
 #include <stack>
 #include <stdint.h>
 #include <cstdlib>
-
+#include <mutex>
 using namespace std;
 
 namespace VObjectPool {
@@ -22,6 +22,7 @@ namespace VObjectPool {
         using CollectionObjPool = vector<ObjectPool>;
         static CollectionObjPool vec_ObjPool;
         static stack<uint32_t> st_Free;
+        static mutex mut;
         uint32_t ui_val;
 
     public:
@@ -30,6 +31,8 @@ namespace VObjectPool {
 
         void* operator new(size_t num_bytes) {
             void* objMemory = NULL;
+
+            lock_guard<mutex> lock(mut);
             if (vec_ObjPool.capacity() < MAX_OBJECTS)
                 vec_ObjPool.reserve(MAX_OBJECTS);
 
@@ -56,6 +59,7 @@ namespace VObjectPool {
             return objMemory;
         }
         void operator delete(void* mem) {
+            lock_guard<mutex> lock(mut);
             const intptr_t index = ((intptr_t)static_cast<ObjectPool*>(mem) - (intptr_t)vec_ObjPool.data() ) / ((intptr_t)sizeof(ObjectPool));
             if (index >= 0 && index < static_cast<intptr_t >(vec_ObjPool.size())) {
                 st_Free.push(static_cast<uint32_t >(index));
@@ -74,6 +78,12 @@ namespace VObjectPool {
 
     template<int SIZE>
     stack<uint32_t> ObjectPool<SIZE>::st_Free;
+
+    template<int SIZE>
+    const int ObjectPool<SIZE>::MAX_OBJECTS;
+
+    template <int SIZE>
+    mutex ObjectPool<SIZE>::mut;
 
 }
 #endif //VLIB_OBJECTPOOL_H

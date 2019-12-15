@@ -14,7 +14,8 @@ using namespace std;
 namespace VThread {
     class Thread {
     public:
-        Thread(int id);
+        Thread(long id);
+        Thread();
 
         virtual ~Thread() {};
 
@@ -31,8 +32,10 @@ namespace VThread {
     protected:
         virtual void run() = 0;
 
-    private:
+    protected:
         int _id;
+
+    private:
         bool stopped;
         unique_ptr<thread> t;
     };
