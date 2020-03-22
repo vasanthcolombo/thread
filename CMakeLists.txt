@@ -58,3 +58,6 @@ add_executable(ringbuffer
 
 add_executable(game
         game.cpp)
+
+add_executable(scratch
+        scratch.cpp)
