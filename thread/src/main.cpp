@@ -60,7 +60,7 @@ private:
     int _iLoop;
 };
 
-/*
+
 int main() {
     shared_ptr<Account> oAcc = make_shared<Account>(1000);
     DepositHandler oDep(oAcc, 1, 5);
@@ -73,4 +73,4 @@ int main() {
     oWith.join();
     //this_thread::sleep_for(chrono::seconds(10));
     return 0;
-}*/
+}

@@ -7,6 +7,7 @@
 #include <array>
 #include <chrono>
 #include <random>
+#include <memory>
 
 using namespace std;
 
@@ -121,16 +122,29 @@ Cat getCat() {
 }
 
 template <typename T>
-void rota(T first, T end) {
+void rever(T first, T end) {
     end--;
     while(first < end) {
         swap(*first++, *end--);
     }
 }
 
-int main() {
-    vector<int> v = {4,6,7,1,2,10};
+template <class T>
+void part_sort(T first, T middle, T end) {
+    make_heap(first, middle);
+    for (T itr = middle; itr < end; ++end) {
+        if (*itr++ < *first) {
+            pop_heap(first, middle);
+            swap(*(middle - 1), *itr);
+            push_heap(first, middle);
+        }
+    }
+}
 
-    rota(v.begin(), v.end());
-    for_each(v.begin(), v.end(), [](int i) {cout << " " << i;});
+int main() {
+    vector v = {9,8,6,7,4,5,2,0};
+    part_sort(v.begin(), v.begin()+4, v.end());
+
+    for_each(v.begin(), v.end(), [](int i ){cout << i << " ";});
+
 }

@@ -56,8 +56,23 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/objectPool/test)
 add_executable(ringbuffer
         producerConsumer/ringbuffer.cpp)
 
+# UTIl CLASSES
+FILE(GLOB UTIL_SOURCES
+        util/src/*.cpp
+        util/main.cpp
+        thread/src/*.cpp)
+
+add_executable(utilMain
+        ${UTIL_SOURCES})
+target_include_directories(utilMain
+        PRIVATE util/include
+        PRIVATE thread/include)
+
 add_executable(game
         game.cpp)
 
 add_executable(scratch
         scratch.cpp)
+
+add_executable(scratch2
+        scratch2.cpp)
