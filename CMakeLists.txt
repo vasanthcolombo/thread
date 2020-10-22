@@ -68,6 +68,34 @@ target_include_directories(utilMain
         PRIVATE util/include
         PRIVATE thread/include)
 
+# TCP_CLIENT
+FILE(GLOB TCP_CLIENT
+        executables/tcp_client/src/tcp_client.cpp
+        network/src/*.cpp
+        thread/src/*.cpp
+        util/src/*.cpp)
+
+add_executable(tcp_client
+        ${TCP_CLIENT})
+target_include_directories(tcp_client
+        PRIVATE network/include
+        PRIVATE thread/include
+        PRIVATE util/include)
+
+# TCP_SERVER
+FILE(GLOB TCP_SERVER
+        executables/tcp_server/src/tcp_server.cpp
+        network/src/*.cpp
+        thread/src/*.cpp
+        util/src/*.cpp)
+
+add_executable(tcp_server
+        ${TCP_SERVER})
+target_include_directories(tcp_server
+        PRIVATE network/include
+        PRIVATE thread/include
+        PRIVATE util/include)
+
 add_executable(game
         game.cpp)
 
