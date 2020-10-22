@@ -45,7 +45,7 @@ public:
     static void createLogger(LogLevel level, std::string logFileName);
     static void createLogger(LogLevel level);
     static void destroyLogger();
-    void log(LogLevel logLevel, std::string& text);
+    void log(LogLevel logLevel, std::string text);
     void log(LogLevel logLevel, const char *text);
 
 private:
