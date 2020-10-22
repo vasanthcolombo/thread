@@ -19,7 +19,7 @@ Client::Client(ConfigReader &configReader) {
             abort();
         }
     }
-    logger.log(Logger::INFO, std::to_string(noOfClients) + " client senders operating on individual threads created");
+    logger.log(Logger::INFO, " client with " + std::to_string(noOfClients) + " senders operating on individual threads created");
 }
 
 void Client::start() {

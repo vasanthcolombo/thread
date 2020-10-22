@@ -23,7 +23,10 @@ Server::Server(ConfigReader &configReader) {
 }
 
 void Server::start() {
-    std::for_each(sessions.begin(), sessions.end(), [](ServerSession& session){session.start();});
+    std::for_each(sessions.begin(), sessions.end(), [](ServerSession& session) {
+        for (int i = 0; i < session.getSupportedConnections(); ++i)
+            session.start();    // each will trigger the socket to listen on a different thread
+    });
 }
 
 void Server::waitToFinish() {

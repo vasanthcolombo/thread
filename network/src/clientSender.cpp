@@ -12,7 +12,7 @@
 ClientSender::ClientSender(const ConfigReader& config, int id) :
     configReader_(config),
     id_(id),
-    idName_("ClientSender " + std::to_string(id_) + ": ") {
+    idName_("[Sender " + std::to_string(id_) + "] ") {
     std::string srcIp = configReader_.get(NetworkConfigReader::SRC_IP);
     int port = configReader_.getUnsignedInt(NetworkConfigReader::SRC_PORT);
     if (!srcIp.empty() && port != UNDEFINED_INT) {

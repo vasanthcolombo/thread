@@ -8,10 +8,15 @@
 #include "socket.h"
 #include "logger.h"
 
+struct ConnectedClientInfo {
+    std::string clientIp;
+    std::string port;
+};
+
 class ServerSocket : public Socket {
 public:
     ServerSocket(std::string src_ip, int port);
-    int waitForConnection();
+    int waitForConnection(ConnectedClientInfo& connectedClientInfo);
 
 private:
     Logger logger;

@@ -20,6 +20,7 @@ public:
     static const std::string BURST_INTERVAL_SEC;
     static const std::string BURST_INTERVAL_NANOS;
     static const std::string LINES_SENT_IN_BURST;
+    static const std::string NUM_CONNS;
 
 };
 

@@ -18,6 +18,7 @@ public:
     ServerSession(ServerSession&&) = default;
     bool start();
     void waitToFinish();
+    int getSupportedConnections();
 
 private:
     void run(int threadNum);
@@ -28,6 +29,6 @@ private:
     int id_;
     std::string idName_;
     Logger logger;
-
+    int numConnsPerSession;
 };
 #endif //VLIB_SERVERSESSION_H

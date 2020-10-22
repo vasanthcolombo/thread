@@ -15,6 +15,9 @@ ServerSession::ServerSession(const ConfigReader &configReader, int id) :
     if (!srcIp.empty() && port != UNDEFINED_INT) {
         socket_ = std::make_unique<ServerSocket>(srcIp, port);
         logger.log(Logger::INFO, idName_ + "Session created with source ip: " + srcIp + ", source port: " + std::to_string(port));
+
+        numConnsPerSession = configReader_.getUnsignedInt(NetworkConfigReader::NUM_CONNS) != UNDEFINED_INT ? configReader_.getUnsignedInt(NetworkConfigReader::NUM_CONNS) : 1;
+        logger.log(Logger::INFO, idName_ + "Session accepts " + std::to_string(numConnsPerSession) + " simultaneous connections");
     }
     else {
         std::string errorStr = idName_ + "Invalid source ip: " + srcIp + " or port: " + std::to_string(port) + " for server reader id: " + std::to_string(id_);
@@ -39,7 +42,10 @@ void ServerSession::run(int threadNum) {
     printStr = idName_ + "[thd " + std::to_string(threadNum) + "] ";
 
     try {
-        dataSocket = socket_->waitForConnection();
+        ConnectedClientInfo connectedClientInfo;
+        dataSocket = socket_->waitForConnection(connectedClientInfo);
+        logger.log(Logger::INFO, printStr + "Accepted connection from " + connectedClientInfo.clientIp+ ":"
+            + connectedClientInfo.port);
     }
     catch (std::exception& e) {
         logger.log(Logger::FTL, printStr + "Unable to start server reader due to " + e.what());
@@ -62,4 +68,8 @@ void ServerSession::run(int threadNum) {
 
 void ServerSession::waitToFinish() {
     for_each(vec_thd_.begin(), vec_thd_.end(), [](std::thread& thd){thd.join();});
+}
+
+int ServerSession::getSupportedConnections() {
+    return numConnsPerSession;
 }
