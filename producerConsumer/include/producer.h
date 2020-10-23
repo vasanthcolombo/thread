@@ -11,8 +11,6 @@
 #include <mutex>
 #include <condition_variable>
 
-using namespace VThread;
-
 template <class T>
 class MessagePipe;
 

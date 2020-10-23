@@ -12,8 +12,6 @@
 #include "consumer.h"
 #include "producer.h"
 
-using namespace VThread;
-
 template <class T>
 class MessagePipe {
 public:

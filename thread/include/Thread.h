@@ -11,33 +11,31 @@
 #include <future>
 using namespace std;
 
-namespace VThread {
-    class Thread {
-    public:
-        Thread(long id);
-        Thread();
+class Thread {
+public:
+    Thread(long id);
+    Thread();
 
-        virtual ~Thread() {};
+    virtual ~Thread() {};
 
-        void join();
+    void join();
 
-        void start();
+    void start();
 
-        void stop();
+    void stop();
 
-        int get_id();
+    int get_id();
 
-        bool is_stopped();
+    bool is_stopped();
 
-    protected:
-        virtual void run() = 0;
+protected:
+    virtual void run() = 0;
 
-    protected:
-        int _id;
+protected:
+    int _id;
 
-    private:
-        bool stopped;
-        unique_ptr<thread> t;
-    };
-}
+private:
+    bool stopped;
+    unique_ptr<thread> t;
+};
 #endif //THREAD_THREAD_H

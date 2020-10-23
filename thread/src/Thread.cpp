@@ -5,8 +5,6 @@
 #include "Thread.h"
 #include <sstream>
 
-using namespace VThread;
-
 Thread::Thread(long id) : _id(id){
     stopped = true;
 }
