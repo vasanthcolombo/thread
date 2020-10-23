@@ -1,12 +1,12 @@
 //
 // Created by vasan on 10/19/2019.
 //
-#include "pcFW.h"
+#include "messagePipe.h"
 #include "consumer.h"
 #include "producer.h"
 
 template <class T>
-class PCFW;
+class MessagePipe;
 
 class Number {
 public:
@@ -18,9 +18,9 @@ private:
     int value;
 };
 
-class NumberProducer : public Producer<Number> {
+class NumberProducer : public Producer<Number>, public Thread {
 public:
-    NumberProducer(PCFW<Number>& fw) : Producer<Number>(fw){};
+    NumberProducer(std::shared_ptr<MessagePipe<Number>> pipe) : Producer<Number>(pipe){};
 
 private:
     void run() {
@@ -30,26 +30,27 @@ private:
     }
 };
 
-class NumberConsumer : public Consumer<Number> {
+class NumberConsumer : public Consumer<Number>, public Thread {
 public:
-    NumberConsumer(PCFW<Number>& fw) : Consumer<Number>(fw){};
+    NumberConsumer(std::shared_ptr<MessagePipe<Number>> pipe) : Consumer<Number>(pipe){};
 
 private:
     void run() {
-        for (int i = 0; i < 10; ++i) {
-            cout << Consumer<Number>::get()->getValue() << endl;
+        for (int i = 0; !is_stopped(); ++i) {
+            cout << get()->getValue() << endl;
         }
     }
 };
 int main() {
-    PCFW<Number> num;
+    std::shared_ptr<MessagePipe<Number>> pipe = std::make_shared<MessagePipe<Number>>();
 
-    NumberProducer producer(num);
-    NumberConsumer consumer(num);
+    NumberProducer producer(pipe);
+    NumberConsumer consumer(pipe);
 
     producer.start();
     consumer.start();
 
     producer.join();
+    consumer.stop();
     consumer.join();
 }

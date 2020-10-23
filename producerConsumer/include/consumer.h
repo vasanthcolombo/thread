@@ -5,41 +5,41 @@
 #define VLIB_CONSUMER_H
 
 #include "Thread.h"
-#include "pcFW.h"
+#include "messagePipe.h"
 #include <queue>
 #include <memory>
 #include <mutex>
 #include <condition_variable>
 #include <sstream>
 
-using namespace std;
 using namespace VThread;
 
 template <class T>
-class PCFW;
+class MessagePipe;
 
 template <class T>
-class Consumer : public Thread {
+class Consumer {
 public:
-    Consumer(PCFW<T>& p) : mut(p.getMutex()), pipe(p.getPipe()), cond(p.getCond()) {};
+    Consumer(std::shared_ptr<MessagePipe<T>> p, int waitT = 5) : messagePipe(p), waitTime(waitT) {};
 
 protected:
-    unique_ptr<T> get();
-private:
-    virtual void run() = 0;
+    std::unique_ptr<T> get();
 
 private:
-    shared_ptr<mutex> mut;
-    shared_ptr<queue<unique_ptr<T>>> pipe;
-    shared_ptr<condition_variable> cond;
+    std::shared_ptr<MessagePipe<T>> messagePipe;
+    int waitTime;   // waits for this secs before checking exit status at derived class
 };
 
 template <class T>
-unique_ptr<T> Consumer<T>::get() {
-    unique_lock<mutex> lock(*mut.get());
-    cond->wait(lock, [=](){return !pipe->empty();});
-    unique_ptr<T> val = move(pipe->front());
-    pipe->pop();
+std::unique_ptr<T> Consumer<T>::get() {
+    std::unique_lock<std::mutex> lock(*messagePipe->getMutex());
+
+    bool success = messagePipe->getCond()->wait_for(lock, std::chrono::duration<int>(std::chrono::seconds(waitTime)),
+                                                    [=](){return !messagePipe->getPipe()->empty();});
+    if (!success)
+        return NULL;
+    std::unique_ptr<T> val = move(messagePipe->getPipe()->front());
+    messagePipe->getPipe()->pop();
     lock.unlock();
     return move(val);
 }

@@ -5,39 +5,38 @@
 #define VLIB_PRODUCER_H
 
 #include "Thread.h"
-#include "pcFW.h"
+#include "messagePipe.h"
 #include <queue>
 #include <memory>
 #include <mutex>
 #include <condition_variable>
 
-using namespace std;
 using namespace VThread;
 
 template <class T>
-class PCFW;
+class MessagePipe;
 
 template <class T>
-class Producer : public Thread {
+class Producer {
 public:
-    Producer(PCFW<T>& p) : mut(p.getMutex()), pipe(p.getPipe()), cond(p.getCond()) {};
+    Producer(std::shared_ptr<MessagePipe<T>> p) : messagePipe(p) {};
+    Producer() {
+        messagePipe = std::make_shared<MessagePipe<T>>();
+    };
 
 protected:
     bool put(unique_ptr<T> t);
-private:
-    virtual void run() = 0;
+    std::shared_ptr<MessagePipe<T>> getMessagePipe();
 
 private:
-    shared_ptr<mutex> mut;
-    shared_ptr<queue<unique_ptr<T>>> pipe;
-    shared_ptr<condition_variable> cond;
+    std::shared_ptr<MessagePipe<T>> messagePipe;
 };
 
 template <class T>
 bool Producer<T>::put(unique_ptr<T> t) {
-    lock_guard<mutex> lock(*mut.get());
-    pipe->push(move(t));
-    cond->notify_all();
+    lock_guard<std::mutex> lock(*messagePipe->getMutex());
+    messagePipe->getPipe()->push(move(t));
+    messagePipe->getCond()->notify_all();
     return true;
 }
 #endif //VLIB_PRODUCER_H
